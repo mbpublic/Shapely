@@ -1,4 +1,4 @@
-package mbudarz.shapelyapp;
+package mbudarz.shapely;
 
 import org.junit.Test;
 
