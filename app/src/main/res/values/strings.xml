@@ -2,4 +2,9 @@
     <string name="app_name">Shapely</string>
     <string name="action_settings">Settings</string>
     <string name="homescreen">Welcome to Team 10</string>
+    <string name="addactivity">Add Activity</string>
+    <string name="Importance">Importance</string>
+    <string name="Task">Task</string>
+    <string name="Date">Date</string>
+
 </resources>
