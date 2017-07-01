@@ -22,23 +22,18 @@ public class AddActivity extends Activity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+        myDataBase = SQLiteDB.getInstance(this);
 
-        myDataBase = new SQLiteDB(this);
-
-
-        //set parameters when button is pressed
+        //set text params
         editTask = (EditText)findViewById(R.id.editText);
         editImportance = (EditText)findViewById(R.id.editText6);
         editDate = (EditText)findViewById(R.id.editText5);
 
-
+        //Accept Button inserts data
         final Button accept = findViewById(R.id.button);
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-
                 boolean isInserted = myDataBase.insertData(editTask.getText().toString(),
                                                             editImportance.getText().toString(),
                                                             editDate.getText().toString()   );
@@ -54,6 +49,20 @@ public class AddActivity extends Activity {
 
             }
         });
+
+        //Go Back Button
+        final Button goback = findViewById(R.id.button2);
+        goback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent rev = new Intent(AddActivity.this, MainActivity.class);
+                startActivity(rev);
+
+            }
+        });
+
+
+
     }
     }
 
