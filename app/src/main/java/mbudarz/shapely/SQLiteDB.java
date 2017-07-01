@@ -10,11 +10,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SQLiteDB extends SQLiteOpenHelper {
 
     private static SQLiteDB mydatabase;
-    private static int increment = 2;
 
     public static final String DATABASE_NAME = "tasks.db";
     public static final String TABLE_NAME = "tasks_list";
-    public static final int DATABASE_VERSION = 1;
+
+
     public static final String COL_1 = "_id";
     public static final String COL_2 = "Task";
     public static final String COL_3 = "Importance";
@@ -49,7 +49,8 @@ public class SQLiteDB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_1, increment++);
+        int myid = this.getAllData().getCount() + 1;
+        contentValues.put(COL_1, myid);
         contentValues.put(COL_2, task);
         contentValues.put(COL_3, imp);
         contentValues.put(COL_4, d);
@@ -59,6 +60,12 @@ public class SQLiteDB extends SQLiteOpenHelper {
             return false;
         }
         else return true;
+    }
+
+
+    public void deleteData(String key){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, COL_1 + "=" + key, null);
     }
 
     public Cursor getAllData() {

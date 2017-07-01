@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -21,12 +23,11 @@ public class MainActivity extends Activity {
 
     private SQLiteDB myDataBase;
     private SimpleCursorAdapter dataAdapter;
-    ListView mylistview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main);
 
         //instantiate the database & cursor
         myDataBase = SQLiteDB.getInstance(this);
@@ -44,135 +45,87 @@ public class MainActivity extends Activity {
         });
     }
 
-        private void displayListView() {
+    private void displayListView() {
 
             //look at data
             Cursor mycursor = myDataBase.getAllData();
 
             //data at cursor
-            String[] columns = new String[] {
+            String[] columns = new String[]{
                     myDataBase.COL_2,
                     myDataBase.COL_3,
                     myDataBase.COL_4,
-             };
+            };
 
-             int[] to = new int[]{
-                R.id.taskmain,
-                R.id.importancemain,
-                R.id.datemain,
-             };
+            int[] to = new int[]{
+                    R.id.taskmain,
+                    R.id.importancemain,
+                    R.id.datemain,
+            };
 
 
-             //adapter using cursor
+            //adapter using cursor
 
             dataAdapter = new SimpleCursorAdapter(
-                    this, R.layout.activity_main,
+                    this, R.layout.list_main,
                     mycursor,
                     columns,
                     to,
                     0);
 
             //create listview with adapter
-             ListView listView = (ListView) findViewById(R.id.listView1);
-            listView.setAdapter(dataAdapter);
+            ListView lv = (ListView) findViewById(R.id.listView1);
+            lv.setAdapter(dataAdapter);
 
-            listView.setOnItemClickListener(new OnItemClickListener() {
+            lv.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> listView, View view,
-                    int position, long id){
+                                        int position, long id) {
                     //get cursor positioned to corresponding row
                     Cursor cursor = (Cursor) listView.getItemAtPosition(position);
 
                     //get task
-                    String tasktake = cursor.getString(cursor.getColumnCount("task"));
-                    Toast.makeText(getApplicationContext(), tasktake, Toast.LENGTH_SHORT).show();
+                    final String task_take = cursor.getString(cursor.getColumnIndexOrThrow(myDataBase.COL_1));
+                    Toast.makeText(getApplicationContext(), task_take, Toast.LENGTH_SHORT).show();
+
+                    setContentView(R.layout.main_selected);
+
+                    //DELETE BUTTON
+                    FloatingActionButton trashfab = findViewById(R.id.trash);
+                    trashfab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            myDataBase.deleteData(task_take);
+
+                            Intent Storetask = new Intent(MainActivity.this, MainActivity.class);
+                            startActivity(Storetask);
+                        }
+                    });
+
+
+
+
+                    //////////////////////
+                    //EDIT BUTTON.... SOON
+                    /////////////////////
+
+//                    FloatingActionButton editfab = findViewById(R.id.edititem);
+//                    editfab.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            //on click create new activity to start storing tasks
+//                            Intent Storetask = new Intent(MainActivity.this, AddActivity.class);
+//                            startActivity(Storetask);
+//                        }
+//                    });
+
+
 
                 }
-                });
-
-
-
-
-
-
-
-
-
-
-
-        /////////////////////////////////////////////////
-        ////////////////////MODERN IMPLEMENTATION//////////
-        //////////////////////////////////////////////////////
-
-        Cursor mycursor = myDataBase.getAllData();
-
-        //instantiate adapter & listview
-        MainCursorAdapter myadapter = new MainCursorAdapter(this, mycursor);
-        mylistview = (ListView) findViewById(R.id.);
-        mylistview.setAdapter(myadapter);
-
-
-        ///////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////
-
-
-        /////////////////////////////////////////////
-        // OLD INSTANTIATION OF LIST WORKS PROPERLY
-        /////////////////////////////////////////////
-
-
-
-        //Instantiate TaskList
-        ArrayList<String> mytasks = new ArrayList<>();
-
-
-        //Fill in the tasklist
-        Cursor mycurrent = myDataBase.getAllData();
-        if (mycurrent.getCount() != 0){
-            while (mycurrent.moveToNext()) {
-                if (mycurrent.getString(1) != null) {
-                    mytasks.add(mycurrent.getString(1));
-                }
-            }
+            });
         }
 
-        //Display TaskList in simple item list format
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, mytasks);
-        getListView().setAdapter(adapter);
-
-
-        ////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////
-
-
-
-        //Create button and onclick action
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //on click create new activity to start storing tasks
-                Intent Storetask = new Intent(MainActivity.this, AddActivity.class);
-                startActivity(Storetask);
-            }
-        });
-    }
-
-
-    //////////////////////
-    /////return button////
-    //////////////////////
-//
-//    getListView().setOnItemClickListener(new OnItemClickListener(){
-//        public void onItemClick(AdapterView<?> adapter, View v, int position, long id){
-//    }
-//        )};
-
-    //////////////////////
-    //////////////////////
-    //////////////////////
 
     @Override
     protected void onStart(){
