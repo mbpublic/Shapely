@@ -36,7 +36,7 @@ public class SQLiteDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_NAME + " (_id INT PRIMARY KEY, Task TEXT, Importance TEXT, Date TEXT)");
+        db.execSQL("create table " + TABLE_NAME + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, Task TEXT, Importance TEXT, Date TEXT)");
     }
 
     @Override
@@ -45,21 +45,30 @@ public class SQLiteDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertData(String task, String imp, String d){
+    public boolean insertData(String task, String imp, String d) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        int myid = this.getAllData().getCount() + 1;
+        //contentValues.put(COL_1, myid);
+        contentValues.put(COL_2, task);
+        contentValues.put(COL_3, imp);
+        contentValues.put(COL_4, d);
+
+        long result = db.insert(TABLE_NAME, null, contentValues);               //returns -1 on failure
+        return (result != 1);
+    }
+
+    public boolean insertDataID(String task, String imp, String d, int myid){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
         contentValues.put(COL_1, myid);
         contentValues.put(COL_2, task);
         contentValues.put(COL_3, imp);
         contentValues.put(COL_4, d);
 
         long result = db.insert(TABLE_NAME, null, contentValues);               //returns -1 on failure
-        if (result == -1){
-            return false;
-        }
-        else return true;
+        return (result != 1);
     }
 
 
@@ -73,5 +82,10 @@ public class SQLiteDB extends SQLiteOpenHelper {
         Cursor myres = db.rawQuery("select * from " +TABLE_NAME, null);
         return myres;
     }
+
+//    public void update(long rowId, String name, String importance, String date) {
+//
+//        mydatabase.update();
+//    }
 }
 

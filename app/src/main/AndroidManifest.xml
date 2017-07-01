@@ -21,6 +21,10 @@
             android:name=".AddActivity"
             android:label="@string/addactivity">
         </activity>
+        <activity
+            android:name=".AddActivityExisting"
+            android:label="Edit Activity">
+        </activity>
     </application>
 
 </manifest>

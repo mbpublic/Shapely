@@ -76,51 +76,16 @@ public class MainActivity extends Activity {
             //create listview with adapter
             ListView lv = (ListView) findViewById(R.id.listView1);
             lv.setAdapter(dataAdapter);
-
             lv.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> listView, View view,
                                         int position, long id) {
-                    //get cursor positioned to corresponding row
-                    Cursor cursor = (Cursor) listView.getItemAtPosition(position);
 
-                    //get task
-                    final String task_take = cursor.getString(cursor.getColumnIndexOrThrow(myDataBase.COL_1));
-                    Toast.makeText(getApplicationContext(), task_take, Toast.LENGTH_SHORT).show();
-
-                    setContentView(R.layout.main_selected);
-
-                    //DELETE BUTTON
-                    FloatingActionButton trashfab = findViewById(R.id.trash);
-                    trashfab.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            myDataBase.deleteData(task_take);
-
-                            Intent Storetask = new Intent(MainActivity.this, MainActivity.class);
-                            startActivity(Storetask);
-                        }
-                    });
-
-
-
-
-                    //////////////////////
-                    //EDIT BUTTON.... SOON
-                    /////////////////////
-
-//                    FloatingActionButton editfab = findViewById(R.id.edititem);
-//                    editfab.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            //on click create new activity to start storing tasks
-//                            Intent Storetask = new Intent(MainActivity.this, AddActivity.class);
-//                            startActivity(Storetask);
-//                        }
-//                    });
-
-
+                    //Capture position, and change activity view
+                    //Toast.makeText(getApplicationContext(), position, Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(MainActivity.this, AddActivityExisting.class);
+                    i.putExtra("position", position);
+                    startActivity(i);
 
                 }
             });
